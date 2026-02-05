@@ -50,7 +50,7 @@ struct HealthResponse {
 // 占位：数据库列表接口（返回模拟数据）
 #[derive(Deserialize)]
 struct ListDatabasesRequest {
-    db_type: Option<String>, // "mysql", "postgres", "sqlite"
+    // db_type: Option<String>, // "mysql", "postgres", "sqlite"
 }
 
 #[derive(Serialize)]
