@@ -24,6 +24,8 @@ pub enum DatabasePool {
     SQLite(SqlitePool),
     /// Redis connection manager.
     Redis(RedisConnectionManager),
+    /// Unsupported database type.
+    Unsupported,
 }
 
 /// Manages database connection pools.
@@ -97,6 +99,10 @@ impl PoolManager {
                     .map_err(|e| AppError::RedisConnection(e.to_string()))?;
                 DatabasePool::Redis(manager)
             }
+            _ => {
+                // For now, return Unsupported for new database types
+                DatabasePool::Unsupported
+            }
         };
 
         self.pools.write().await.insert(id.clone(), pool);
@@ -138,6 +144,9 @@ impl PoolManager {
                     .query_async::<String>(&mut conn)
                     .await
                     .map_err(|e| AppError::RedisOperation(e.to_string()))?;
+            }
+            DatabasePool::Unsupported => {
+                return Err(AppError::UnsupportedDatabaseType("Connection type not supported yet".into()));
             }
         }
 

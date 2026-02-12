@@ -88,6 +88,10 @@ pub enum AppError {
     /// Service unavailable.
     #[error("service unavailable: {0}")]
     ServiceUnavailable(String),
+
+    /// Unsupported database type.
+    #[error("unsupported database type: {0}")]
+    UnsupportedDatabaseType(String),
 }
 
 impl AppError {
@@ -113,6 +117,7 @@ impl AppError {
             AppError::ExternalService(_) => "EXTERNAL_SERVICE_ERROR",
             AppError::Timeout(_) => "TIMEOUT",
             AppError::ServiceUnavailable(_) => "SERVICE_UNAVAILABLE",
+            AppError::UnsupportedDatabaseType(_) => "UNSUPPORTED_DATABASE_TYPE",
         }
     }
 
@@ -128,6 +133,7 @@ impl AppError {
             AppError::Forbidden(_) => StatusCode::FORBIDDEN,
             AppError::Conflict(_) => StatusCode::CONFLICT,
             AppError::UnsafeSql(_) => StatusCode::BAD_REQUEST,
+            AppError::UnsupportedDatabaseType(_) => StatusCode::BAD_REQUEST,
             // Server errors (5xx)
             AppError::DatabaseConnection(_) => StatusCode::BAD_GATEWAY,
             AppError::DatabaseQuery(_) => StatusCode::INTERNAL_SERVER_ERROR,

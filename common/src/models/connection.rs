@@ -22,10 +22,30 @@ pub enum DbType {
     MongoDB,
     /// ClickHouse database.
     ClickHouse,
-    /// Rabbitmq message broker.
-    Rabbitmq,
     /// Elasticsearch search engine.
     Elasticsearch,
+    /// Oracle database.
+    Oracle,
+    /// SQL Server database.
+    SqlServer,
+    /// MariaDB database.
+    MariaDB,
+    /// Cassandra database.
+    Cassandra,
+    /// InfluxDB time series database.
+    InfluxDB,
+    /// DB2 database.
+    DB2,
+    /// CouchDB document database.
+    CouchDB,
+    /// Neo4j graph database.
+    Neo4j,
+    /// Memcached key-value store.
+    Memcached,
+    /// HBase columnar database.
+    HBase,
+    /// Milvus vector database.
+    Milvus,
 }
 
 impl DbType {
@@ -38,8 +58,18 @@ impl DbType {
             DbType::Redis => Some(6379),
             DbType::MongoDB => Some(27017),
             DbType::ClickHouse => Some(8123),
-            DbType::Rabbitmq => Some(5672),
             DbType::Elasticsearch => Some(9200),
+            DbType::Oracle => Some(1521),
+            DbType::SqlServer => Some(1433),
+            DbType::MariaDB => Some(3306),
+            DbType::Cassandra => Some(9042),
+            DbType::InfluxDB => Some(8086),
+            DbType::DB2 => Some(50000),
+            DbType::CouchDB => Some(5984),
+            DbType::Neo4j => Some(7474),
+            DbType::Memcached => Some(11211),
+            DbType::HBase => Some(2181),
+            DbType::Milvus => Some(19530),
         }
     }
 }
@@ -53,8 +83,18 @@ impl std::fmt::Display for DbType {
             DbType::Redis => write!(f, "redis"),
             DbType::MongoDB => write!(f, "mongodb"),
             DbType::ClickHouse => write!(f, "clickhouse"),
-            DbType::Rabbitmq => write!(f, "rabbitmq"),
             DbType::Elasticsearch => write!(f, "elasticsearch"),
+            DbType::Oracle => write!(f, "oracle"),
+            DbType::SqlServer => write!(f, "sqlserver"),
+            DbType::MariaDB => write!(f, "mariadb"),
+            DbType::Cassandra => write!(f, "cassandra"),
+            DbType::InfluxDB => write!(f, "influxdb"),
+            DbType::DB2 => write!(f, "db2"),
+            DbType::CouchDB => write!(f, "couchdb"),
+            DbType::Neo4j => write!(f, "neo4j"),
+            DbType::Memcached => write!(f, "memcached"),
+            DbType::HBase => write!(f, "hbase"),
+            DbType::Milvus => write!(f, "milvus"),
         }
     }
 }
@@ -98,7 +138,7 @@ pub struct CreateConnectionRequest {
     pub name: String,
     /// Database type.
     pub db_type: DbType,
-    /// Database host (required for mysql/postgres/redis/mongodb/clickhouse/rabbitmq/elasticsearch).
+    /// Database host (required for mysql/postgres/redis/mongodb/clickhouse/elasticsearch/oracle/sqlserver/mariadb/cassandra/influxdb/db2/couchdb/neo4j/memcached/hbase/milvus).
     pub host: Option<String>,
     /// Database port (uses default if not specified).
     pub port: Option<u16>,
