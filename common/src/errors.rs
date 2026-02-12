@@ -147,6 +147,40 @@ impl AppError {
         }
     }
 
+    /// Returns the response code (200=success, 4xx=client error, 5xx=server error, 7xx=business, 8xx=database, 9xx=external).
+    pub fn response_code(&self) -> i32 {
+        use crate::response::code;
+        match self {
+            // 客户端错误 (4xx)
+            AppError::InvalidInput(_) => code::BAD_REQUEST,
+            AppError::Validation(_) => code::VALIDATION_ERROR,
+            AppError::Unauthorized => code::UNAUTHORIZED,
+            AppError::Forbidden(_) => code::FORBIDDEN,
+            
+            // 业务异常 (7xx)
+            AppError::NotFound(_) => code::DATA_NOT_FOUND,
+            AppError::Conflict(_) => code::DATA_ALREADY_EXISTS,
+            
+            // 数据库相关 (8xx)
+            AppError::ConnectionNotFound(_) => code::DB_CONNECTION_NOT_FOUND,
+            AppError::UnsupportedDatabaseType(_) => code::DB_UNSUPPORTED_TYPE,
+            AppError::UnsafeSql(_) => code::DB_UNSAFE_SQL,
+            AppError::DatabaseConnection(_) => code::DB_CONNECTION_ERROR,
+            AppError::DatabaseQuery(_) => code::DB_QUERY_ERROR,
+            AppError::RedisConnection(_) => code::REDIS_CONNECTION_ERROR,
+            AppError::RedisOperation(_) => code::REDIS_OPERATION_ERROR,
+            
+            // 服务器错误 (5xx)
+            AppError::Internal(_) => code::INTERNAL_ERROR,
+            AppError::Configuration(_) => code::INTERNAL_ERROR,
+            AppError::Timeout(_) => code::GATEWAY_TIMEOUT,
+            AppError::ServiceUnavailable(_) => code::SERVICE_UNAVAILABLE,
+            
+            // 外部服务 (9xx)
+            AppError::ExternalService(_) => code::EXTERNAL_SERVICE_ERROR,
+        }
+    }
+
     /// Returns whether this error should be logged as an error or warning.
     fn is_server_error(&self) -> bool {
         self.status_code().is_server_error()
@@ -164,12 +198,14 @@ impl IntoResponse for AppError {
 
         // Don't expose internal error details to clients
         let message = match &self {
-            AppError::Internal(_) => "An internal server error occurred".to_string(),
-            AppError::Configuration(_) => "A configuration error occurred".to_string(),
+            AppError::Internal(_) => "服务器内部错误".to_string(),
+            AppError::Configuration(_) => "配置错误".to_string(),
             e => e.to_string(),
         };
 
         let body = Json(json!({
+            "code": self.response_code(),
+            "message": message,
             "success": false,
             "error": {
                 "code": self.code(),

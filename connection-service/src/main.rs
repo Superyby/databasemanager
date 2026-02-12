@@ -40,6 +40,10 @@ const DEFAULT_PORT: u16 = 8081;
         handlers::test_connection,
         handlers::health_check,
         handlers::get_pool_info,
+        // Trait 演示接口
+        handlers::demo_trait_real,
+        handlers::demo_trait_mock,
+        handlers::demo_trait_generic,
     ),
     components(schemas(
         common::models::ConnectionConfig,
@@ -49,10 +53,12 @@ const DEFAULT_PORT: u16 = 8081;
         handlers::ConnectionTestResult,
         handlers::HealthResponse,
         handlers::PoolInfo,
+        handlers::TraitDemoResponse,
     )),
     tags(
         (name = "connections", description = "连接管理端点"),
-        (name = "health", description = "健康检查端点")
+        (name = "health", description = "健康检查端点"),
+        (name = "demo", description = "Trait 演示端点")
     )
 )]
 struct ApiDoc;

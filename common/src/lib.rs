@@ -17,4 +17,4 @@ pub mod utils;
 // Re-export commonly used types
 pub use config::AppConfig;
 pub use errors::{AppError, AppResult};
-pub use response::{ApiResponse, ApiError, ResponseMeta, Pagination, PaginatedData};
+pub use response::{ApiResponse, ApiError, ResponseMeta, Pagination, PaginatedData, code as ResponseCode};
